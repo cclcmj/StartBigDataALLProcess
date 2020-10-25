@@ -17,18 +17,16 @@ case class Command(
   def exec: IO[Unit] = IO { p.run() }
   def verifyExec: IO[Boolean] =
     IO { "jps".!! }.map(str => verifyjudge(str, action))
-  def verifyjudge(str: String, action: String): Boolean =
-    ((
-      serviceProcessName
+  def verifyjudge(str: String, action: String): Boolean ={
+    val result = serviceProcessName
         .split(" ")
         .toList
         .map(n => str.contains(n))
-        .reduce(_ && _),
-      action
-    ): @unchecked) match {
-      case (true, "start") | (false, "stop") => true
-      case (true, "stop") | (false, "start") => false
-    }
+    (action : @unchecked) match {
+      case "start" => result.reduce(_ && _)
+      case "stop" => !result.reduce(_ || _)
+     }
+  }
   def polledverify(implicit timer: Timer[IO]): IO[String] = {
     val startTimeIO = timer.clock.monotonic(MILLISECONDS)
     def essAcc(action: String): IO[String] = {
