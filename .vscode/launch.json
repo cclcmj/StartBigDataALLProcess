@@ -11,6 +11,13 @@
             "mainClass": "main.Exec",
             "buildTarget": "root",
             "args": ["start","all"]
+        },
+        {
+            "type": "scala",
+            "name": "test v2raysc",
+            "request": "launch",
+            "testClass": "ammonite.integration.AmmoniteBridge",
+            "args": ["${workspaceFolder}/src/main/resources/StartV2ray.sc","a"]
         }
     ]
 }
